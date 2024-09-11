@@ -6,9 +6,12 @@ inputs:
   gh-token:
     description: "Github Token or Pat Token"
     required: true
+  release-tag:
+    description: "Release Tag"
+    required: true
   build-number:
     description: "Build number"
-    required: false
+    required: true
 
 runs:
   using: "node20"

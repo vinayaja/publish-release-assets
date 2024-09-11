@@ -1,0 +1,19 @@
+name: "Publish Release Assets"
+description: "Publish assets to Github Release"
+author: "Vinayak Jadhav"
+
+inputs:
+  gh-token:
+    description: "Github Token or Pat Token"
+    required: true
+  build-number:
+    description: "Build number"
+    required: false
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
+
+branding:
+  icon: "check-square"
+  color: "white"

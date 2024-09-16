@@ -34,7 +34,7 @@ export async function run() {
                 }
             }));
         
-        console.log(`${upload.data}`);
+        console.log(upload.data);
 
     }   catch(error){
         setFailed((error as Error)?.message ?? "Unknown error");

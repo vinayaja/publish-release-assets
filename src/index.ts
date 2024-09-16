@@ -19,7 +19,7 @@ export async function run() {
                 }
             })).data.id;
         
-        const zipFiledata = fs.createReadStream(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`);
+        const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`);
 
         const upload =  (await octoKit.rest.repos.uploadReleaseAsset({
                 owner: context.repo.owner,
@@ -28,9 +28,13 @@ export async function run() {
                 name: `${buildNumber}.zip`,
                 data: zipFiledata,
                 headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
+                'X-GitHub-Api-Version': '2022-11-28',
+                'content-type': 'application/octet-stream',
+                'content-length': zipFiledata.length
                 }
             }));
+        
+        console.log(upload);
 
     }   catch(error){
         setFailed((error as Error)?.message ?? "Unknown error");

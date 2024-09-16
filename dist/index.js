@@ -31120,10 +31120,9 @@ async function run() {
             repo: github_1.context.repo.repo,
             release_id: releaseId,
             name: `${buildNumber}.zip`,
-            data: `@${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`,
+            data: zipFiledata,
             headers: {
-                'X-GitHub-Api-Version': '2022-11-28',
-                'Content-Type': 'application/zip'
+                'X-GitHub-Api-Version': '2022-11-28'
             }
         }));
     }

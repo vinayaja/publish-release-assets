@@ -31114,9 +31114,7 @@ async function run() {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         })).data.id;
-        console.log(releaseId);
         const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`);
-        console.log(zipFiledata);
         const upload = (await octoKit.rest.repos.uploadReleaseAsset({
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
@@ -31129,7 +31127,7 @@ async function run() {
                 'content-length': zipFiledata.length
             }
         }));
-        console.log(upload);
+        console.log(`${upload.data}`);
     }
     catch (error) {
         (0, core_1.setFailed)((_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Unknown error");

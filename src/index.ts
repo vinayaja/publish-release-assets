@@ -4,7 +4,7 @@ import { context, getOctokit } from "@actions/github";
 export async function run() {
     const token = getInput("gh-token");
     const releaseTag = getInput("release-tag");
-    const assetName = getInput("asset-name");
+    const assetNames = getInput("asset-names");
 
     const octoKit = getOctokit(token);
 
@@ -18,10 +18,15 @@ export async function run() {
                 'X-GitHub-Api-Version': '2022-11-28'
                 }
             })).data.id;
-
-        const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${assetName}`);
+        
+        const allAssetNames = assetNames.split(',');
+            
+        for(var assetName of allAssetNames)
+        {
+            console.log(`Uploading asset ${assetName}`);
+            const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${assetName}`);
  
-        const upload =  (await octoKit.rest.repos.uploadReleaseAsset({
+            const upload =  (await octoKit.rest.repos.uploadReleaseAsset({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 release_id: releaseId,
@@ -34,7 +39,8 @@ export async function run() {
                 }
             }));
         
-        console.log(upload.data);
+            console.log(upload.data);
+        };
 
     }   catch(error){
         setFailed((error as Error)?.message ?? "Unknown error");

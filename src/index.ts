@@ -26,11 +26,10 @@ export async function run() {
                 repo: context.repo.repo,
                 release_id: releaseId,
                 name: `${buildNumber}.zip`,
-                data: zipFiledata,
+                data: `@${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`,
                 headers: {
                 'X-GitHub-Api-Version': '2022-11-28',
-                'Content-Type': 'application/zip',
-                'Content-Length': zipFiledata.length
+                'Content-Type': 'application/zip'
                 }
             }));
 

@@ -31106,23 +31106,25 @@ async function run() {
     const octoKit = (0, github_1.getOctokit)(token);
     try {
         const fs = __nccwpck_require__(7147);
-        const uploadUrl = (await octoKit.rest.repos.getReleaseByTag({
+        const releaseId = (await octoKit.rest.repos.getReleaseByTag({
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
             tag: releaseTag,
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
-        })).data.upload_url.replace("{?name,label}", `?name=${buildNumber}.zip`);
-        const headers = new Headers();
-        headers.set('Content-Type', 'application/zip');
-        headers.set('Accept', 'application/vnd.github+json');
-        headers.set('Authorization', `Bearer ${token}`);
-        const request = new Request(uploadUrl, {
-            method: 'Post',
-            headers: headers,
-            body: fs.createReadStream(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`)
-        });
+        })).data.id;
+        const upload = (await octoKit.rest.repos.uploadReleaseAsset({
+            owner: github_1.context.repo.owner,
+            repo: github_1.context.repo.repo,
+            release_id: releaseId,
+            name: `${buildNumber}.zip`,
+            data: fs.createReadStream(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`),
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28',
+                'Content-Type': 'application/zip'
+            }
+        }));
     }
     catch (error) {
         (0, core_1.setFailed)((_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : "Unknown error");

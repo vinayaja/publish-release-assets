@@ -31114,15 +31114,17 @@ async function run() {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         })).data.id;
+        const zipFiledata = fs.createReadStream(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`);
         const upload = (await octoKit.rest.repos.uploadReleaseAsset({
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
             release_id: releaseId,
             name: `${buildNumber}.zip`,
-            data: fs.createReadStream(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`),
+            data: zipFiledata,
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28',
-                'Content-Type': 'application/zip'
+                'Content-Type': 'application/zip',
+                'Content-Length': zipFiledata.length
             }
         }));
     }

@@ -31114,7 +31114,9 @@ async function run() {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         })).data.id;
+        console.log(releaseId);
         const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`);
+        console.log(zipFiledata);
         const upload = (await octoKit.rest.repos.uploadReleaseAsset({
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,

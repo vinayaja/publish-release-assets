@@ -24,34 +24,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - uses: azure/login@v2
+    - uses: vinayaja/publish-release-assets@main
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - uses: vinayaja/keyvault-secrets@v1.0.1
-      with:
-        keyvault-name: 'githubtest-vault'
-        secret-names: 'testsecret,tester'
+        gh-token: ${{ github.token }}
+        release-tag: 'v1.0.0'
+        build-number: '11.09.2024.${{ github.run_number }}'
         
-```
-If you want to fetch multiple secrets:
-
-```yml
-
-- uses: vinayaja/keyvault-secrets@v1.0.1
-  with:
-    keyvault-name: 'githubtest-vault'
-    secret-names: 'testsecret,tester'
-```
-
-If you want to fetch secrets with pattern in name:
-
-```yml
-
-- uses: vinayaja/keyvault-secrets@v1.0.1
-  with:
-    keyvault-name: 'githubtest-vault'
-    secreat-name-pattern: 'config'
 ```
 
 ### Output of this action

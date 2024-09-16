@@ -9,8 +9,8 @@ inputs:
   release-tag:
     description: "Release Tag"
     required: true
-  build-number:
-    description: "Build number"
+  asset-name:
+    description: "asset name"
     required: true
 
 runs:

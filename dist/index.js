@@ -31102,7 +31102,7 @@ async function run() {
     var _a;
     const token = (0, core_1.getInput)("gh-token");
     const releaseTag = (0, core_1.getInput)("release-tag");
-    const buildNumber = (0, core_1.getInput)("build-number");
+    const assetName = (0, core_1.getInput)("asset-name");
     const octoKit = (0, github_1.getOctokit)(token);
     try {
         const fs = __nccwpck_require__(7147);
@@ -31114,12 +31114,12 @@ async function run() {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         })).data.id;
-        const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`);
+        const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${assetName}`);
         const upload = (await octoKit.rest.repos.uploadReleaseAsset({
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
             release_id: releaseId,
-            name: `${buildNumber}.zip`,
+            name: assetName,
             data: zipFiledata,
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28',

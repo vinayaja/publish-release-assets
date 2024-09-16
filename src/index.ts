@@ -4,7 +4,7 @@ import { context, getOctokit } from "@actions/github";
 export async function run() {
     const token = getInput("gh-token");
     const releaseTag = getInput("release-tag");
-    const buildNumber = getInput("build-number");
+    const assetName = getInput("asset-name");
 
     const octoKit = getOctokit(token);
 
@@ -19,13 +19,13 @@ export async function run() {
                 }
             })).data.id;
 
-        const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${buildNumber}.zip`);
+        const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${assetName}`);
  
         const upload =  (await octoKit.rest.repos.uploadReleaseAsset({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 release_id: releaseId,
-                name: `${buildNumber}.zip`,
+                name: assetName,
                 data: zipFiledata,
                 headers: {
                 'X-GitHub-Api-Version': '2022-11-28',

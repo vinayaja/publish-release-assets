@@ -13,7 +13,7 @@ inputs:
     description: "asset name"
     required: true
   path:
-    description: "asset path, default is ${{ github.wokspace }}"
+    description: "asset path, default is github workspace"
     required: false
   overwrite:
     description: "overwrite, default is false"

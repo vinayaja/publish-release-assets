@@ -12,6 +12,12 @@ inputs:
   asset-names:
     description: "asset name"
     required: true
+  path:
+    description: "asset path, default is ${{ github.wokspace }}"
+    required: false
+  overwrite:
+    description: "overwrite, default is false"
+    required: false
 
 runs:
   using: "node20"

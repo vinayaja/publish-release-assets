@@ -31103,9 +31103,37 @@ async function run() {
     const token = (0, core_1.getInput)("gh-token");
     const releaseTag = (0, core_1.getInput)("release-tag");
     const assetNames = (0, core_1.getInput)("asset-names");
+    const path = (0, core_1.getInput)("path") || `${process.env.GITHUB_WORKSPACE}`;
+    const overwrite = (0, core_1.getBooleanInput)("overwrite") || false;
     const octoKit = (0, github_1.getOctokit)(token);
+    const fs = __nccwpck_require__(7147);
+    function customLogic(firstInput, secondInput) {
+        if (firstInput === true && secondInput === false) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    ;
+    async function uploadAsset(assetName, path, releaseId) {
+        console.log(`Uploading asset ${assetName}`);
+        const zipFiledata = fs.readFileSync(`${path}/${assetName}`);
+        const upload = (await octoKit.rest.repos.uploadReleaseAsset({
+            owner: github_1.context.repo.owner,
+            repo: github_1.context.repo.repo,
+            release_id: releaseId,
+            name: assetName,
+            data: zipFiledata,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28',
+                'content-type': 'application/octet-stream',
+                'content-length': zipFiledata.length
+            }
+        }));
+        console.log(upload.data);
+    }
     try {
-        const fs = __nccwpck_require__(7147);
         const releaseId = (await octoKit.rest.repos.getReleaseByTag({
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
@@ -31114,23 +31142,53 @@ async function run() {
                 'X-GitHub-Api-Version': '2022-11-28'
             }
         })).data.id;
-        const allAssetNames = assetNames.split(',');
-        for (var assetName of allAssetNames) {
-            console.log(`Uploading asset ${assetName}`);
-            const zipFiledata = fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/${assetName}`);
-            const upload = (await octoKit.rest.repos.uploadReleaseAsset({
+        let assetIds = (await octoKit.rest.repos.listReleaseAssets({
+            owner: github_1.context.repo.owner,
+            repo: github_1.context.repo.repo,
+            release_id: releaseId,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })).data;
+        let existingAssetNames = [];
+        for (var assetId of assetIds) {
+            let existingAssetName = (await octoKit.rest.repos.getReleaseAsset({
                 owner: github_1.context.repo.owner,
                 repo: github_1.context.repo.repo,
                 release_id: releaseId,
-                name: assetName,
-                data: zipFiledata,
+                asset_id: assetId.id,
                 headers: {
-                    'X-GitHub-Api-Version': '2022-11-28',
-                    'content-type': 'application/octet-stream',
-                    'content-length': zipFiledata.length
+                    'X-GitHub-Api-Version': '2022-11-28'
                 }
-            }));
-            console.log(upload.data);
+            })).data.name;
+            existingAssetNames.push({ assetId: assetId.id, assetName: existingAssetName });
+        }
+        const allAssetNames = assetNames.split(',');
+        for (var assetName of allAssetNames) {
+            for (var existingAssetName of existingAssetNames) {
+                if (existingAssetName.assetName == assetName) {
+                    if (overwrite) {
+                        await octoKit.rest.repos.deleteReleaseAsset({
+                            owner: github_1.context.repo.owner,
+                            repo: github_1.context.repo.repo,
+                            release_id: releaseId,
+                            asset_id: existingAssetName.assetId,
+                            headers: {
+                                'X-GitHub-Api-Version': '2022-11-28'
+                            }
+                        });
+                        await uploadAsset(assetName, path, releaseId);
+                    }
+                    else {
+                        console.error(`${assetName} already exists, please set overwrite input as True`);
+                        break;
+                    }
+                }
+                else {
+                    await uploadAsset(assetName, path, releaseId);
+                }
+                ;
+            }
         }
         ;
     }

@@ -31104,7 +31104,7 @@ async function run() {
     const releaseTag = (0, core_1.getInput)("release-tag");
     const assetNames = (0, core_1.getInput)("asset-names");
     const path = (0, core_1.getInput)("path") || `${process.env.GITHUB_WORKSPACE}`;
-    const overwrite = (0, core_1.getBooleanInput)("overwrite") || false;
+    const overwrite = (0, core_1.getInput)("overwrite") || false;
     const octoKit = (0, github_1.getOctokit)(token);
     const fs = __nccwpck_require__(7147);
     function customLogic(firstInput, secondInput) {

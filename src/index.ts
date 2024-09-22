@@ -6,7 +6,7 @@ export async function run() {
     const releaseTag = getInput("release-tag");
     const assetNames = getInput("asset-names");
     const path = getInput("path") || `${process.env.GITHUB_WORKSPACE}`;
-    const overwrite:boolean = getBooleanInput("overwrite") || false;
+    const overwrite = getInput("overwrite") || false;
     const octoKit = getOctokit(token);
     const fs = require('fs');
 

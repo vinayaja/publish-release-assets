@@ -31107,15 +31107,6 @@ async function run() {
     const overwrite = (0, core_1.getInput)("overwrite") || false;
     const octoKit = (0, github_1.getOctokit)(token);
     const fs = __nccwpck_require__(7147);
-    function customLogic(firstInput, secondInput) {
-        if (firstInput === true && secondInput === false) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-    ;
     async function uploadAsset(assetName, path, releaseId) {
         console.log(`Uploading asset ${assetName}`);
         const zipFiledata = fs.readFileSync(`${path}/${assetName}`);
@@ -31167,6 +31158,7 @@ async function run() {
         for (var assetName of allAssetNames) {
             for (var existingAssetName of existingAssetNames) {
                 if (existingAssetName.assetName == assetName) {
+                    console.log(`${assetName} already exists, checking overwrite input`);
                     if (overwrite) {
                         await octoKit.rest.repos.deleteReleaseAsset({
                             owner: github_1.context.repo.owner,
@@ -31185,6 +31177,7 @@ async function run() {
                     }
                 }
                 else {
+                    console.log(`${assetName} does not exists, proceeding upload`);
                     await uploadAsset(assetName, path, releaseId);
                 }
                 ;

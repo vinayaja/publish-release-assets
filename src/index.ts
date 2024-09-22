@@ -10,14 +10,6 @@ export async function run() {
     const octoKit = getOctokit(token);
     const fs = require('fs');
 
-    function customLogic(firstInput: boolean, secondInput: boolean): boolean {
-        if (firstInput === true && secondInput === false) {
-            return false;
-        } else {
-            return true;
-        }
-    };
-
     async function uploadAsset(assetName: string, path: string, releaseId: number){
         
         console.log(`Uploading asset ${assetName}`);
@@ -88,6 +80,7 @@ export async function run() {
             {
                 if(existingAssetName.assetName == assetName)
                 {
+                    console.log(`${assetName} already exists, checking overwrite input`);
                     if(overwrite)
                     {
                         await octoKit.rest.repos.deleteReleaseAsset({
@@ -108,6 +101,7 @@ export async function run() {
                     
                 }
                 else{
+                    console.log(`${assetName} does not exists, proceeding upload`);
                     await uploadAsset(assetName,path,releaseId);
                 };        
             }

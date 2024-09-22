@@ -31155,8 +31155,8 @@ async function run() {
             existingAssetNames.push({ assetId: assetId.id, assetName: existingAssetName });
         }
         const allAssetNames = assetNames.split(',');
-        for (var assetName of allAssetNames) {
-            for (var existingAssetName of existingAssetNames) {
+        for (var existingAssetName of existingAssetNames) {
+            for (var assetName of allAssetNames) {
                 if (existingAssetName.assetName == assetName) {
                     console.log(`${assetName} already exists, checking overwrite input`);
                     if (overwrite) {

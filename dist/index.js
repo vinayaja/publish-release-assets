@@ -31158,7 +31158,6 @@ async function run() {
         }
         const allAssetNames = assetNames.split(',');
         for (var assetName of allAssetNames) {
-            console.log(`${assetName} check`);
             if (existingAssetNames.includes(assetName)) {
                 console.log(`${assetName} already exists, checking overwrite input`);
                 if (overwrite) {

@@ -1,4 +1,4 @@
-import { getInput, setFailed, getBooleanInput } from "@actions/core";
+import { getInput, setFailed, getBooleanInput, warning, error } from "@actions/core";
 import { context, getOctokit } from "@actions/github"; 
 
 export async function run() {
@@ -6,7 +6,7 @@ export async function run() {
     const releaseTag = getInput("release-tag");
     const assetNames = getInput("asset-names");
     const path = getInput("path") || `${process.env.GITHUB_WORKSPACE}`;
-    const overwrite = getInput("overwrite") || false;
+    const overwrite:boolean = getBooleanInput("overwrite");
     const octoKit = getOctokit(token);
     const fs = require('fs');
 
@@ -80,7 +80,7 @@ export async function run() {
         {             
             if(existingAssetNames.includes(assetName))
             {
-                console.log(`${assetName} already exists, checking overwrite input`);
+                warning(`${assetName} already exists, checking overwrite input`);
                 if(overwrite)
                 {
                     await octoKit.rest.repos.deleteReleaseAsset({
@@ -95,7 +95,7 @@ export async function run() {
                     await uploadAsset(assetName,path,releaseId);
                 }
                 else{
-                    console.error(`${assetName} already exists, please set overwrite input as True`);
+                    error(`${assetName} already exists, please set overwrite input as True`);
                     break;
                 }
                 

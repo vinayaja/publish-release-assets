@@ -31104,7 +31104,7 @@ async function run() {
     const releaseTag = (0, core_1.getInput)("release-tag");
     const assetNames = (0, core_1.getInput)("asset-names");
     const path = (0, core_1.getInput)("path") || `${process.env.GITHUB_WORKSPACE}`;
-    const overwrite = (0, core_1.getInput)("overwrite") || false;
+    const overwrite = (0, core_1.getBooleanInput)("overwrite");
     const octoKit = (0, github_1.getOctokit)(token);
     const fs = __nccwpck_require__(7147);
     async function uploadAsset(assetName, path, releaseId) {
@@ -31159,7 +31159,7 @@ async function run() {
         const allAssetNames = assetNames.split(',');
         for (var assetName of allAssetNames) {
             if (existingAssetNames.includes(assetName)) {
-                console.log(`${assetName} already exists, checking overwrite input`);
+                (0, core_1.warning)(`${assetName} already exists, checking overwrite input`);
                 if (overwrite) {
                     await octoKit.rest.repos.deleteReleaseAsset({
                         owner: github_1.context.repo.owner,
@@ -31173,7 +31173,7 @@ async function run() {
                     await uploadAsset(assetName, path, releaseId);
                 }
                 else {
-                    console.error(`${assetName} already exists, please set overwrite input as True`);
+                    (0, core_1.error)(`${assetName} already exists, please set overwrite input as True`);
                     break;
                 }
             }

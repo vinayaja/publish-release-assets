@@ -18,6 +18,7 @@ inputs:
   overwrite:
     description: "overwrite, default is false"
     required: false
+    default: 'false'
 
 runs:
   using: "node20"

@@ -95,7 +95,6 @@ export async function run() {
                             }
                     });
                     await uploadAsset(assetName,path,releaseId);
-                    break;
                 }
                 else{
                     console.error(`${assetName} already exists, please set overwrite input as True`);
@@ -106,7 +105,6 @@ export async function run() {
             else{
                 console.log(`${assetName} does not exists, proceeding upload`);
                 await uploadAsset(assetName,path,releaseId);
-                break;
             };        
         };
             

@@ -31159,8 +31159,8 @@ async function run() {
         const allAssetNames = assetNames.split(',');
         for (var assetName of allAssetNames) {
             if (existingAssetNames.includes(assetName)) {
-                (0, core_1.warning)(`${assetName} already exists, checking overwrite input`);
                 if (overwrite) {
+                    (0, core_1.warning)(`overwrite is set to ${overwrite}, deleting existing asset`);
                     await octoKit.rest.repos.deleteReleaseAsset({
                         owner: github_1.context.repo.owner,
                         repo: github_1.context.repo.repo,

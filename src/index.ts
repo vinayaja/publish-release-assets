@@ -1,4 +1,4 @@
-import { getInput, setFailed, getBooleanInput, warning, error } from "@actions/core";
+import { getInput, setFailed, getBooleanInput, warning } from "@actions/core";
 import { context, getOctokit } from "@actions/github"; 
 
 export async function run() {
@@ -80,9 +80,9 @@ export async function run() {
         {             
             if(existingAssetNames.includes(assetName))
             {
-                warning(`${assetName} already exists, checking overwrite input`);
                 if(overwrite)
                 {
+                    warning(`overwrite is set to ${overwrite}, deleting existing asset`);
                     await octoKit.rest.repos.deleteReleaseAsset({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
@@ -98,7 +98,6 @@ export async function run() {
                     setFailed(`${assetName} already exists, please set overwrite input as True`);
                     break;
                 }
-                
             }
             else{
                 console.log(`${assetName} does not exists, proceeding upload`);

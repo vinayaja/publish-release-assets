@@ -10,7 +10,7 @@ inputs:
     description: "Release Tag"
     required: true
   asset-names:
-    description: "asset name"
+    description: "asset names, for multiple names use , seperated values"
     required: true
   path:
     description: "asset path, default is github workspace"

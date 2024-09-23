@@ -31142,6 +31142,7 @@ async function run() {
             }
         })).data;
         let existingAssetNames = [];
+        let existingAssets = [];
         for (var assetId of assetIds) {
             let existingAssetName = (await octoKit.rest.repos.getReleaseAsset({
                 owner: github_1.context.repo.owner,
@@ -31152,39 +31153,38 @@ async function run() {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
             })).data.name;
-            existingAssetNames.push({ assetId: assetId.id, assetName: existingAssetName });
+            existingAssets.push({ assetId: assetId.id, assetName: existingAssetName });
+            existingAssetNames.push(existingAssetName);
         }
         const allAssetNames = assetNames.split(',');
         for (var assetName of allAssetNames) {
-            for (var existingAssetName of existingAssetNames) {
-                console.log(`${existingAssetName.assetName} check`);
-                if (existingAssetName.assetName == assetName) {
-                    console.log(`${assetName} already exists, checking overwrite input`);
-                    if (overwrite) {
-                        await octoKit.rest.repos.deleteReleaseAsset({
-                            owner: github_1.context.repo.owner,
-                            repo: github_1.context.repo.repo,
-                            release_id: releaseId,
-                            asset_id: existingAssetName.assetId,
-                            headers: {
-                                'X-GitHub-Api-Version': '2022-11-28'
-                            }
-                        });
-                        await uploadAsset(assetName, path, releaseId);
-                        break;
-                    }
-                    else {
-                        console.error(`${assetName} already exists, please set overwrite input as True`);
-                        break;
-                    }
-                }
-                else {
-                    console.log(`${assetName} does not exists, proceeding upload`);
+            console.log(`${assetName} check`);
+            if (existingAssetNames.includes(assetName)) {
+                console.log(`${assetName} already exists, checking overwrite input`);
+                if (overwrite) {
+                    await octoKit.rest.repos.deleteReleaseAsset({
+                        owner: github_1.context.repo.owner,
+                        repo: github_1.context.repo.repo,
+                        release_id: releaseId,
+                        asset_id: (existingAssets.filter(item => item.assetName == assetName))[0].assetId,
+                        headers: {
+                            'X-GitHub-Api-Version': '2022-11-28'
+                        }
+                    });
                     await uploadAsset(assetName, path, releaseId);
                     break;
                 }
-                ;
+                else {
+                    console.error(`${assetName} already exists, please set overwrite input as True`);
+                    break;
+                }
             }
+            else {
+                console.log(`${assetName} does not exists, proceeding upload`);
+                await uploadAsset(assetName, path, releaseId);
+                break;
+            }
+            ;
         }
         ;
     }

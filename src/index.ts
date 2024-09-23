@@ -78,6 +78,7 @@ export async function run() {
         {
             for(var existingAssetName of existingAssetNames)
             {
+                console.log(`${existingAssetName.assetName} check`);
                 if(existingAssetName.assetName == assetName)
                 {
                     console.log(`${assetName} already exists, checking overwrite input`);

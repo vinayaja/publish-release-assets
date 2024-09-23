@@ -95,8 +95,7 @@ export async function run() {
                     await uploadAsset(assetName,path,releaseId);
                 }
                 else{
-                    error(`${assetName} already exists, please set overwrite input as True`);
-                    setFailed(`workflow failed`);
+                    setFailed(`${assetName} already exists, please set overwrite input as True`);
                     break;
                 }
                 

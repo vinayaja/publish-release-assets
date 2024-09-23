@@ -31173,8 +31173,7 @@ async function run() {
                     await uploadAsset(assetName, path, releaseId);
                 }
                 else {
-                    (0, core_1.error)(`${assetName} already exists, please set overwrite input as True`);
-                    (0, core_1.setFailed)(`workflow failed`);
+                    (0, core_1.setFailed)(`${assetName} already exists, please set overwrite input as True`);
                     break;
                 }
             }

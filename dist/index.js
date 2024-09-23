@@ -31174,6 +31174,7 @@ async function run() {
                 }
                 else {
                     (0, core_1.error)(`${assetName} already exists, please set overwrite input as True`);
+                    (0, core_1.setFailed)(`workflow failed`);
                     break;
                 }
             }

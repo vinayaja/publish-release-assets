@@ -96,6 +96,7 @@ export async function run() {
                 }
                 else{
                     error(`${assetName} already exists, please set overwrite input as True`);
+                    setFailed(`workflow failed`);
                     break;
                 }
                 

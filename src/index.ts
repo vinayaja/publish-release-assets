@@ -74,9 +74,9 @@ export async function run() {
 
         const allAssetNames = assetNames.split(',');
             
-        for(var existingAssetName of existingAssetNames)
+        for(var assetName of allAssetNames)
         {
-            for(var assetName of allAssetNames)
+            for(var existingAssetName of existingAssetNames)
             {
                 if(existingAssetName.assetName == assetName)
                 {
@@ -93,6 +93,7 @@ export async function run() {
                                 }
                         });
                         await uploadAsset(assetName,path,releaseId);
+                        break;
                     }
                     else{
                         console.error(`${assetName} already exists, please set overwrite input as True`);
@@ -103,6 +104,7 @@ export async function run() {
                 else{
                     console.log(`${assetName} does not exists, proceeding upload`);
                     await uploadAsset(assetName,path,releaseId);
+                    break;
                 };        
             }
             
